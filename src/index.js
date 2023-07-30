@@ -1,11 +1,13 @@
 import express from "express";
 import {connect} from "./config/database.js"
-import Tweet from "./models/tweet.js";
-import HashTag from "./models/hashtag.js";
 import { PORT } from "./config/server-config.js";
-import TweetRepository from "./repositories/tweet-repository.js";
+import router from "./routes/index.js";
 
 const app=express();
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+app.use('/api',router);
+
 
 app.listen(PORT,async ()=>{
     console.log(`Started the server at PORT:${PORT}`);
@@ -18,11 +20,11 @@ app.listen(PORT,async ()=>{
     //     comment: "Yo Yo Yo!!!"
     // })
     // HashTag.create({
-    //     text: "travel",
+    //     text: "yolo",
     //     tweets: ['64c4d4bcb8124afabdb0eea3']
     // })
-    const tweetRepo=new TweetRepository();
-    let response=await tweetRepo.deleteTweet({"_id": '64c3d136ab24556d8003842e'})
-    console.log(response);
+    // const hashtagRepo=new HashtagRepository();
+    // let tags=await hashtagRepo.getHashtagByName(["travel","yolo"]);
+    // console.log(tags);
     console.log('Mongo DB connected')
 })

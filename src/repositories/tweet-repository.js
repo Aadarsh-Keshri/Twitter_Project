@@ -36,7 +36,8 @@ class TweetRepository{
             let response=await Tweet.deleteOne(data);
             return response;
         } catch (error) {
-            
+            console.log(error);
+            throw error;
         }
     }
 }
