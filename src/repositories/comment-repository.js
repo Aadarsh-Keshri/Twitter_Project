@@ -6,3 +6,5 @@ class CommentRepository extends CrudRepository{
         super(Comment);
     }
 }
+
+export default CommentRepository;

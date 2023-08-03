@@ -1,0 +1,40 @@
+import UserRepository from "../repositories/user-repository.js";
+
+class UserService{
+    constructor(){
+        this.userRepository=new UserRepository();
+    }
+
+    async signUp(data){
+        try {
+            const user=await this.userRepository.create(data);
+            return user;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async signIn(data){
+        try {
+            const email=data.email;
+            const currentPassword=data.password;
+            const user=await this.userRepository.findBy({email});
+            if(!user){
+                throw{
+                    message: 'No user found'
+                }
+            }
+            if(!user.comparePassword(currentPassword)){
+                throw{
+                    message: 'Incorrect password'
+                }
+            }
+            console.log("User succefully signed in");
+        } catch (error) {
+            throw error;
+        }
+    }
+}
+
+export default UserService;

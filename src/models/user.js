@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import {SALT_ROUNDS} from "../config/server-config.js"
 
 const userSchema=new mongoose.Schema({
     email: {
@@ -7,7 +9,8 @@ const userSchema=new mongoose.Schema({
         unique: true
     },
     password: {
-        type: String
+        type: String,
+        required: true
     },
     bio: {
         type: String
@@ -21,6 +24,19 @@ const userSchema=new mongoose.Schema({
         type: String
     }
 });
+
+userSchema.pre('save',function encrypt(next){
+    const user=this;
+    const salt=bcrypt.genSaltSync(+SALT_ROUNDS);
+    const encryptedPassword=bcrypt.hashSync(user.password,salt);
+    user.password=encryptedPassword;
+    next();
+})
+
+userSchema.methods.comparePassword=function compare(password){
+    const user=this;
+    return bcrypt.compareSync(password,user.password);
+}
 
 const User=mongoose.model('User',userSchema);
 export default User;
